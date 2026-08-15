@@ -13,7 +13,7 @@ TOKEN = "8505771374:AAEZPiKb3eMUIjwqdjDe0WqYWq9yipBs8b0"
 ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
 
 model = WhisperModel(
-    "tiny",
+    "small",
     device="cpu",
     compute_type="int8",
 )
@@ -79,6 +79,8 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "-b:a", "48k",
         "output_audio.ogg",
     ], check=True)
+
+    await update.message.reply_text(text)
 
     await update.message.reply_voice(
         voice=open("output_audio.ogg", "rb")
