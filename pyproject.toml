@@ -9,5 +9,6 @@ dependencies = [
     "groq>=1.6.0",
     "imageio-ffmpeg>=0.6.0",
     "piper-tts>=1.6.1",
+    "python-dotenv>=1.2.2",
     "python-telegram-bot>=22.8",
 ]

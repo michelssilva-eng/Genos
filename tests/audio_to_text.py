@@ -20,7 +20,7 @@ client = Groq(
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message:
-            return
+        return
     telegram_voice = update.message.voice
 
     if not telegram_voice:
