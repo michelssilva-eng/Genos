@@ -7,7 +7,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 from functools import partial
 
 from settings import VOICE_PATH, GROQ_KEY, TELEGRAM_TOKEN
-from handlers import start, echo
+from handlers import start, echo, reply
 
 
 def main():
@@ -34,7 +34,8 @@ def main():
     # bot telegram
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.VOICE, partial(echo, model=model, client=client)))
+    # app.add_handler(MessageHandler(filters.VOICE, partial(echo, model=model, client=client)))
+    app.add_handler(MessageHandler(filters.VOICE, partial(reply, model=model, client=client, piper_voice=piper_voice)))
     app.run_polling()
 
 if __name__ == "__main__":

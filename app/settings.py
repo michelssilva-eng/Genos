@@ -17,6 +17,8 @@ TELEGRAM_TOKEN = get_required_env("TELEGRAM_TOKEN")
 
 VOICE_PATH = "app/voices/pt_BR-cadu-medium.onnx"
 INPUT_AUDIO_PATH = "app/audios/input_audio.ogg"
+RAW_OUTPUT_AUDIO_PATH = "app/audios/waw_output_audio.wav"
+OUTPUT_AUDIO_PATH = "app/audios/output_audio.ogg"
 
 CORRECTION_PROMPT = f"""
 Você é um corretor de transcrições de áudio.
