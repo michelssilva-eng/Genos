@@ -31,7 +31,14 @@ def main():
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     
-    # app.add_handler(MessageHandler(filters.VOICE, partial(echo, model=model, client=client)))
+    # app.add_handler(MessageHandler(
+    #     filters.VOICE,
+    #     partial(echo_in_text,
+    #             model=model,
+    #             client=client,
+    #             input_audio_path=INPUT_AUDIO_PATH,
+    #             correction_prompt=CORRECTION_PROMPT)))
+    
     app.add_handler(MessageHandler(
         filters.VOICE,
         partial(
@@ -39,10 +46,7 @@ def main():
             model=model,
             client=client,
             piper_voice=piper_voice,
-            input_audio_path=INPUT_AUDIO_PATH,
-            correction_prompt=CORRECTION_PROMPT,
-            raw_output_audio_path=RAW_OUTPUT_AUDIO_PATH,
-            output_audio_path=OUTPUT_AUDIO_PATH)))
+            correction_prompt=CORRECTION_PROMPT)))
 
     
     app.run_polling()
