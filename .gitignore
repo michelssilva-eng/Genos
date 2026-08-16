@@ -7,8 +7,11 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+.venv/
 
-# adds
+# Environment variables
 .env
+
+# Local files
 app/audios/
+*.zip

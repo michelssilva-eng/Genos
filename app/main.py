@@ -1,13 +1,13 @@
+from functools import partial
+
 from faster_whisper import WhisperModel
 from piper import PiperVoice
 from groq import Groq
 import imageio_ffmpeg
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
-from functools import partial
-
 from settings import VOICE_PATH, GROQ_KEY, TELEGRAM_TOKEN
-from handlers import start, echo, reply
+from handlers import start, echo_in_text, reply
 
 
 def main():

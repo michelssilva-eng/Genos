@@ -1,13 +1,8 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-
 from faster_whisper import WhisperModel
-
 from groq import Groq
-
 from piper import PiperVoice
-
-import wave
 
 from settings import INPUT_AUDIO_PATH, OUTPUT_AUDIO_PATH
 from services import sound_to_text, correct_text, consult_ai, text_to_sound

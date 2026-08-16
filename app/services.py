@@ -1,13 +1,13 @@
-from faster_whisper import WhisperModel
-from groq import Groq
-from piper import PiperVoice
 import wave
 import subprocess
 
+from faster_whisper import WhisperModel
+from groq import Groq
+from piper import PiperVoice
 import imageio_ffmpeg
 
-
 from settings import INPUT_AUDIO_PATH, CORRECTION_PROMPT, RAW_OUTPUT_AUDIO_PATH, OUTPUT_AUDIO_PATH
+
 
 def sound_to_text(model: WhisperModel) -> str:
     segments, info = model.transcribe(
@@ -74,6 +74,7 @@ def text_to_sound(piper_voice: PiperVoice, text: str):
 
     subprocess.run([
         ffmpeg,
+        "-y",
         "-i", RAW_OUTPUT_AUDIO_PATH,
         "-c:a", "libopus",
         "-b:a", "48k",
