@@ -11,4 +11,4 @@ wheels/
 
 # adds
 .env
-audios/
+app/audios/
