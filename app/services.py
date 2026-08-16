@@ -6,45 +6,48 @@ from groq import Groq
 from piper import PiperVoice
 import imageio_ffmpeg
 
-from settings import INPUT_AUDIO_PATH, CORRECTION_PROMPT, RAW_OUTPUT_AUDIO_PATH, OUTPUT_AUDIO_PATH
 
-
-def sound_to_text(model: WhisperModel) -> str:
+def sound_to_text(
+        model: WhisperModel,
+        input_audio_path: str) -> str:
+    
     segments, info = model.transcribe(
-        INPUT_AUDIO_PATH,
+        input_audio_path,
         language="pt",
     )
 
-    text = ""
-        
-    for segment in segments:
-        text += segment.text
+    text = "".join(segment.text for segment in segments)
 
-    if text == "":
+    if not text.strip():
         raise ValueError("Erro: Nenhuma palavra foi identificiada.")
 
     return text
 
-def correct_text(client: Groq, text: str) -> str:
+def correct_text(
+        client: Groq,
+        text: str,
+        correction_prompt: str) -> str:
 
     chat_completion = client.chat.completions.create(
         messages=[
             {
                 "role": "user",
-                "content": CORRECTION_PROMPT + text,
+                "content": correction_prompt + text,
             }
         ],
         model="openai/gpt-oss-20b",
     )
 
-    correct_text = chat_completion.choices[0].message.content
+    corrected_text = chat_completion.choices[0].message.content
 
-    if not correct_text or correct_text == "":
+    if not corrected_text or corrected_text == "":
         raise ValueError("Erro: A chamada de correção à LLM respondeu de forma inesperada.")
 
-    return correct_text
+    return corrected_text
 
-def consult_ai(client: Groq, text: str) -> str:
+def consult_ai(
+        client: Groq,
+        text: str) -> str:
 
     chat_completion = client.chat.completions.create(
         messages=[
@@ -63,8 +66,13 @@ def consult_ai(client: Groq, text: str) -> str:
 
     return ai_response
 
-def text_to_sound(piper_voice: PiperVoice, text: str):
-    with wave.open(RAW_OUTPUT_AUDIO_PATH, "wb") as wav_file:
+def text_to_sound(
+        piper_voice: PiperVoice,
+        text: str,
+        raw_output_audio_path: str,
+        output_audio_path: str):
+    
+    with wave.open(raw_output_audio_path, "wb") as wav_file:
         piper_voice.synthesize_wav(
             text,
             wav_file,
@@ -75,9 +83,38 @@ def text_to_sound(piper_voice: PiperVoice, text: str):
     subprocess.run([
         ffmpeg,
         "-y",
-        "-i", RAW_OUTPUT_AUDIO_PATH,
+        "-i", raw_output_audio_path,
         "-c:a", "libopus",
         "-b:a", "48k",
-        OUTPUT_AUDIO_PATH,
+        output_audio_path,
     ], check=True)
+
+# def text_to_sound(piper_voice: PiperVoice, text: str) -> bytes:
+#     wav_buffer = BytesIO()
+
+#     with wave.open(wav_buffer, "wb") as wav_file:
+#         piper_voice.synthesize_wav(
+#             text,
+#             wav_file,
+#         )
+
+#     wav_buffer.seek(0)
+
+#     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+
+#     result = subprocess.run(
+#         [
+#             ffmpeg,
+#             "-i", "pipe:0",
+#             "-c:a", "libopus",
+#             "-b:a", "48k",
+#             "-f", "ogg",
+#             "pipe:1",
+#         ],
+#         input=wav_buffer.read(),
+#         capture_output=True,
+#         check=True,
+#     )
+
+#     return result.stdout
     
