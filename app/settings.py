@@ -13,7 +13,7 @@ def get_required_env(name: str) -> str:
 GROQ_KEY = get_required_env("GROQ_KEY")
 TELEGRAM_TOKEN = get_required_env("TELEGRAM_TOKEN")
 
-VOICE_PATH = "app/voices/pt_BR-cadu-medium.onnx"
+VOICE_PATH = "app/voices/pt_BR-faber-medium.onnx"
 
 CORRECTION_PROMPT = f"""
 Você é um corretor de transcrições de áudio.
