@@ -5,8 +5,13 @@ from piper import PiperVoice
 from groq import Groq
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
-from settings import VOICE_PATH, GROQ_KEY, TELEGRAM_TOKEN, INPUT_AUDIO_PATH, CORRECTION_PROMPT, RAW_OUTPUT_AUDIO_PATH, OUTPUT_AUDIO_PATH
+
+from settings import VOICE_PATH, GROQ_KEY, TELEGRAM_TOKEN, CORRECTION_PROMPT
 from handlers import start, echo_in_text, reply
+
+from ports.stt.adapters.faster_whisper import FasterWhisper
+from ports.tts.adapters.piper import Piper
+from ports.llm.adapters.groq import GroqLLM
 
 
 def main():
@@ -18,14 +23,20 @@ def main():
         compute_type="int8",
     )
 
+    stt = FasterWhisper(model=model)
+
     # llm
     client = Groq(
             api_key=GROQ_KEY
         )
 
+    llm = GroqLLM(client=client)
+
+
     # text-to-sound
     piper_voice = PiperVoice.load(VOICE_PATH)
 
+    tts = Piper(voice=piper_voice)
 
     # bot telegram
     app = Application.builder().token(TELEGRAM_TOKEN).build()
@@ -43,9 +54,9 @@ def main():
         filters.VOICE,
         partial(
             reply,
-            model=model,
-            client=client,
-            piper_voice=piper_voice,
+            stt=stt,
+            llm=llm,
+            tts=tts,
             correction_prompt=CORRECTION_PROMPT)))
 
     
