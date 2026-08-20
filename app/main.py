@@ -1,19 +1,28 @@
 from functools import partial
+import logging
 
 from faster_whisper import WhisperModel
 from piper import PiperVoice
 from groq import Groq
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
-from ports.stt.adapters.faster_whisper import FasterWhisper
-from ports.tts.adapters.piper import Piper
-from ports.llm.adapters.groq import GroqLLM
+from engines.stt.providers.faster_whisper import FasterWhisper
+from engines.tts.providers.piper import Piper
+from engines.llm.providers.groq import GroqLLM
 
-from handlers import start, reply
+from handler import start, reply
 from service import Service
 
 from settings import VOICE_PATH, GROQ_KEY, TELEGRAM_TOKEN
 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s | %(name)s | %(message)s",
+)
+
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("faster_whisper").setLevel(logging.WARNING)
 
 def main():
 
