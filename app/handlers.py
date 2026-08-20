@@ -14,7 +14,7 @@ async def start(
     if not update.message:
         return
 
-    text = "Olá! Me chamo Kira. Qual é o seu nome?"
+    text = "Olá! Me chamo Áisak. Qual é o seu nome?"
 
     output_audio = service.reply_to_start(text)
     

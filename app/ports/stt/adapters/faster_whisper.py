@@ -5,6 +5,8 @@ from faster_whisper import WhisperModel
 from ..interface import SpeechToText
 
 
+
+
 class FasterWhisper(SpeechToText):
     def __init__(self, model: WhisperModel) -> None:
         self.model = model

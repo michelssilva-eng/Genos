@@ -2,7 +2,7 @@ from ports.stt.interface import SpeechToText
 from ports.tts.interface import TextToSpeech
 from ports.llm.interface import LanguageModel
 
-from settings import CORRECTION_PROMPT
+from prompts import CORRECTION_PROMPT, VOICE_RESPONSE_PROMPT
 
 
 class Service:
@@ -16,12 +16,13 @@ class Service:
         self.tts = tts
         self.llm = llm
 
+
     def reply_to_voice(self, input_audio: bytes) -> bytes:
         text = self.stt.transcribe(input_audio)
 
         corrected_text = self.llm.generate(CORRECTION_PROMPT + text)
 
-        ai_response = self.llm.generate(corrected_text)
+        ai_response = self.llm.generate(VOICE_RESPONSE_PROMPT  + corrected_text)
 
         return self.tts.synthesize(ai_response)
 

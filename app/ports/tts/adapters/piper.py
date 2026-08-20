@@ -8,11 +8,14 @@ import imageio_ffmpeg
 from ..interface import TextToSpeech
 
 
+
 class Piper(TextToSpeech):
     def __init__(self, voice: PiperVoice) -> None:
         self.voice = voice
 
     def synthesize(self, text: str) -> bytes:
+
+        text = self._normalize(text=text)
 
         wav_buffer = BytesIO()
 
